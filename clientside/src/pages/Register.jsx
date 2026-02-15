@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 
@@ -10,7 +9,7 @@ import { Label } from "@/components/ui/label";
 
 export function Register() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { register, message } = useAuth(); // use context register
 
   const [form, setForm] = useState({
     username: "",
@@ -25,27 +24,32 @@ export function Register() {
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
-    setLoading(true);
-    setError("");
 
-    try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/auth/register`,
-        form,
-        { withCredentials: true }
-      );
+    if (form.password.length < 8) {
 
-      if (res.data.token && res.data.user) {
-        login(res.data.token, res.data.user);
-        navigate("/dashboard"); // ✅ redirect to dashboard
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "Registration failed. Try again.");
-    } finally {
-      setLoading(false);
+      setError("Password must be at least 8 characters");
+
+      return;
     }
+
+    setLoading(true);
+
+    const success = await register(form);
+
+    if (success) {
+
+      navigate("/dashboard");
+
+    } else {
+
+      setError(message);
+    }
+
+    setLoading(false);
   };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">

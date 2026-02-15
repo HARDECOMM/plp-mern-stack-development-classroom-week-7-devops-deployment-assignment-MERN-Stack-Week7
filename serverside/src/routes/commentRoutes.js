@@ -1,8 +1,8 @@
-const router = require("express").Router();
-const commentController = require("../controllers/commentController");
-const auth = require("../middleware/auth");
+const router = require('express').Router();
+const { addComment, getCommentsForPost } = require('../controllers/commentController');
+const protect = require('../middleware/auth');
 
-router.post("/", auth, commentController.addComment);
-router.get("/post/:postId", commentController.getCommentsForPost);
+router.post('/', protect, addComment);
+router.get('/post/:postId', getCommentsForPost);
 
 module.exports = router;

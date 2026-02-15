@@ -7,7 +7,9 @@ import { CreateEditPage } from "./pages/CreateEditPage";
 import { Profile } from "./pages/Profile";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
-import { Dashboard } from "./pages/Dashboard";   // ✅ new dashboard
+import { Dashboard } from "./pages/Dashboard";   
+import { ForgotPassword } from "./pages/ForgotPassword"; 
+import { ResetPassword } from "./pages/ResetPassword";   
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -16,10 +18,12 @@ export function App() {
     <AuthProvider>
       <Navbar />
       <Routes>
+        {/* Public pages */}
         <Route path="/" element={<Home />} />
         <Route path="/posts" element={<AllPosts />} />
         <Route path="/posts/:slug" element={<PostDetail />} />
 
+        {/* Protected pages */}
         <Route
           path="/dashboard"
           element={
@@ -28,7 +32,6 @@ export function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/create"
           element={
@@ -53,8 +56,12 @@ export function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Auth routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />   
+        <Route path="/reset-password/:token" element={<ResetPassword />} /> 
       </Routes>
     </AuthProvider>
   );

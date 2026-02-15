@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 
@@ -10,7 +9,7 @@ import { Label } from "@/components/ui/label";
 
 export function Login() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, message } = useAuth(); // ✅ include message from context
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
@@ -24,18 +23,14 @@ export function Login() {
     setError("");
 
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/auth/login`,
-        form,
-        { withCredentials: true }
-      );
-
-      if (res.data.token && res.data.user) {
-        login(res.data.token, res.data.user);
-        navigate("/dashboard"); // ✅ redirect to dashboard
+      const success = await login(form); // use context login
+      if (success) {
+        navigate("/dashboard");          // redirect after successful login
+      } else {
+        setError(message || "Login failed. Check credentials"); // show context message
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed. Check your credentials.");
+      setError("Unexpected error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -76,6 +71,13 @@ export function Login() {
                 onChange={handleChange}
                 required
               />
+            </div>
+
+            {/* Forgot password link */}
+            <div className="text-right">
+              <a href="/forgot-password" className="text-blue-600 hover:underline text-sm">
+                Forgot password?
+              </a>
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>
