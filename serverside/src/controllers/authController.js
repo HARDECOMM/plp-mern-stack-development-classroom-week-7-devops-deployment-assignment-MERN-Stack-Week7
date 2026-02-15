@@ -6,7 +6,7 @@ const sendEmail = require('../utils/sendEmail'); // Make sure you have this util
 
 // ---------- Helper: Log safely ----------
 const logInfo = (message, data = null) => {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'production') {
     if (data) console.log(message, data);
     else console.log(message);
   }
