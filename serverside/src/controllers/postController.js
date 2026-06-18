@@ -15,16 +15,39 @@ exports.getPostBySlug = async (req, res) => {
 };
 
 // Create post (slug auto-generated in model)
-// Create post
 exports.createPost = async (req, res) => {
   try {
-    const { title, content, category } = req.body;
+    const {
+      title,
+      content,
+      category,
+      postType,
+      problemStatement,
+      architecture,
+      codeSnippet,
+      codeLanguage,
+      githubUrl,
+      liveDemoUrl,
+      finalOutput,
+      featuredImage
+    } = req.body;
+
     const post = new Post({
       title,
       content,
-      category, // ✅ include category
+      category,
       author: req.user._id,
+      postType: postType || "standard",
+      problemStatement: problemStatement || "",
+      architecture: architecture || "",
+      codeSnippet: codeSnippet || "",
+      codeLanguage: codeLanguage || "javascript",
+      githubUrl: githubUrl || "",
+      liveDemoUrl: liveDemoUrl || "",
+      finalOutput: finalOutput || "",
+      featuredImage: featuredImage || ""
     });
+
     await post.save();
     res.status(201).json({ post });
   } catch (err) {
@@ -36,13 +59,37 @@ exports.createPost = async (req, res) => {
 // Update post
 exports.updatePost = async (req, res) => {
   try {
-    const { title, content, category } = req.body;
+    const {
+      title,
+      content,
+      category,
+      postType,
+      problemStatement,
+      architecture,
+      codeSnippet,
+      codeLanguage,
+      githubUrl,
+      liveDemoUrl,
+      finalOutput,
+      featuredImage
+    } = req.body;
+
     const post = await Post.findOne({ slug: req.params.slug, author: req.user._id });
     if (!post) return res.status(404).json({ message: "Post not found or not yours" });
 
     if (title) post.title = title;
     if (content) post.content = content;
-    if (category) post.category = category; // ✅ update category
+    if (category) post.category = category;
+    if (postType) post.postType = postType;
+
+    if (problemStatement !== undefined) post.problemStatement = problemStatement;
+    if (architecture !== undefined) post.architecture = architecture;
+    if (codeSnippet !== undefined) post.codeSnippet = codeSnippet;
+    if (codeLanguage !== undefined) post.codeLanguage = codeLanguage;
+    if (githubUrl !== undefined) post.githubUrl = githubUrl;
+    if (liveDemoUrl !== undefined) post.liveDemoUrl = liveDemoUrl;
+    if (finalOutput !== undefined) post.finalOutput = finalOutput;
+    if (featuredImage !== undefined) post.featuredImage = featuredImage;
 
     await post.save();
     res.json({ post });

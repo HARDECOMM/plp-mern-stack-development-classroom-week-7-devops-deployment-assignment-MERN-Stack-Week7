@@ -1,1 +1,94 @@
 @import "tailwindcss";
+
+@theme {
+  /* 3MTT Green & Premium White Theme Palette */
+  --color-primary: #008751;
+  --color-primary-foreground: #ffffff;
+  
+  --color-background: #fcfdfe;
+  --color-foreground: #0f172a;
+  
+  --color-card: #ffffff;
+  --color-card-foreground: #0f172a;
+  
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0f172a;
+  
+  --color-secondary: #f0fdf4;
+  --color-secondary-foreground: #14532d;
+  
+  --color-muted: #64748b;
+  --color-muted-foreground: #475569;
+  
+  --color-accent: #f0fdf4;
+  --color-accent-foreground: #008751;
+  
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  
+  --color-border: #e2e8f0;
+  --color-input: #e2e8f0;
+  --color-ring: #008751;
+  
+  /* Font Family Definitions */
+  --font-serif: "Lora", "Merriweather", "Georgia", serif;
+  --font-sans: "Outfit", "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* Styled Scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f8fafc;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+}
+
+/* Custom styles for Medium-like reading experience */
+.prose {
+  font-family: var(--font-serif);
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.8;
+  color: #1e293b;
+}
+
+.prose p {
+  margin-bottom: 1.5rem;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  font-family: var(--font-sans);
+  color: #0f172a;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+}
+
+.prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  background-color: #f1f5f9;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  color: #0f172a;
+}

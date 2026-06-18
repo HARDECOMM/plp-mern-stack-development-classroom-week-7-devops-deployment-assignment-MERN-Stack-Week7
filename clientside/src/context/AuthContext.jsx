@@ -1,11 +1,31 @@
-import { createContext, useState, useContext } from "react";
-import { loginUser, registerUser, forgotPassword, resetPassword as resetPasswordApi } from "../api/auth";
+import { createContext, useState, useContext, useEffect } from "react";
+import { loginUser, registerUser, forgotPassword, resetPassword as resetPasswordApi, getMe } from "../api/auth";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(""); // for success/error messages
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const res = await getMe(token);
+          if (res) {
+            setUser(res);
+          }
+        } catch (err) {
+          console.error("Auth verification failed:", err);
+          localStorage.removeItem("token");
+        }
+      }
+      setLoading(false);
+    };
+    fetchUser();
+  }, []);
 
   // ===== LOGIN =====
   const login = async (formData) => {
@@ -13,7 +33,14 @@ export const AuthProvider = ({ children }) => {
       const res = await loginUser(formData);
       if (res.token && res.user) {
         localStorage.setItem("token", res.token);
-        setUser(res.user);
+        // User login returns user summary, but we can fetch full user details if needed,
+        // or just set what we received. Let's get the full user profile details.
+        try {
+          const fullUser = await getMe(res.token);
+          setUser(fullUser);
+        } catch {
+          setUser(res.user);
+        }
         return true;
       }
       return false;
@@ -68,11 +95,11 @@ export const AuthProvider = ({ children }) => {
       return false;
     }
   };
-
   return (
     <AuthContext.Provider
       value={{
         user,
+        loading,
         login,
         logout,
         register,
